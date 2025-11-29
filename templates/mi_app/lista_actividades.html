@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Actividades{% endblock %}
+
+{% block content %}
+  <header class="app-header py-4 mb-4">
+    <div class="container d-flex align-items-center justify-content-between">
+      <div>
+        <h1 class="h4 mb-0">Actividades del Proyecto</h1>
+        <small class="d-block mt-1">Visor de enfoque — listado de actividades</small>
+      </div>
+      <div class="text-end text-white">
+        <span class="me-3">Total: <strong>{{ total }}</strong></span>
+        <span class="me-2">Completadas: {{ completadas }}</span>
+        <span>Pendientes: {{ pendientes }}</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container pb-5">
+    <div class="row mb-4">
+      <div class="col-md-8">
+        <form class="d-flex" role="search" method="get">
+          <input class="form-control me-2" type="search" placeholder="Buscar actividad..." aria-label="Buscar" name="q" value="{{ q }}">
+          <button class="btn btn-primary" type="submit">Buscar</button>
+        </form>
+      </div>
+      <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <a href="{% url 'actividad_add' %}" class="btn btn-outline-primary">Crear nueva</a>
+      </div>
+    </div>
+
+    {% if actividades and actividades.count %}
+    <div class="row g-4">
+      {% for actividad in actividades %}
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card card-actividad p-3 h-100">
+          <div class="d-flex flex-column h-100">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <h5 class="mb-1">{{ actividad.titulo }}</h5>
+                <p class="mb-2 text-truncate" style="max-height:3.6rem;">{{ actividad.descripcion }}</p>
+              </div>
+              <div class="text-end">
+                <a href="{% url 'actividad_edit' actividad.pk %}" class="btn btn-sm btn-outline-secondary mb-1">Editar</a>
+                <a href="{% url 'actividad_toggle' actividad.pk %}" class="btn btn-sm btn-outline-success mb-1">{% if actividad.completada %}Reabrir{% else %}Completar{% endif %}</a>
+                <a href="{% url 'actividad_delete' actividad.pk %}" class="btn btn-sm btn-outline-danger mb-1">Eliminar</a>
+              </div>
+            </div>
+            <div class="mt-auto d-flex justify-content-between align-items-center">
+              <div class="meta">Creada: {{ actividad.fecha_creacion|date:"d M Y H:i" }}</div>
+              {% if actividad.completada %}
+                <span class="badge badge-completada text-white">Completada</span>
+              {% else %}
+                <span class="badge badge-pendiente text-white">Pendiente</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="card shadow-sm p-5 text-center empty-state">
+      <h3 class="mb-2">No hay actividades todavía</h3>
+      <p class="mb-0">Crea tu primera actividad desde el panel de administración o usando la API.</p>
+    </div>
+    {% endif %}
+  </main>
+{% endblock %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mi Aplicación - Actividades</title>
+</head>
+<body>
+    <h1>¡Bienvenido a mi aplicación Django!</h1>
+    <h2>Lista de Actividades</h2>
+    
+    {% if actividades %}
+        {% for actividad in actividades %}
+        <div style="border: 1px solid #ccc; padding: 10px; margin: 10px;">
+            <h3>{{ actividad.titulo }}</h3>
+            <p>{{ actividad.descripcion }}</p>
+            <small>Estado: {% if actividad.completada %}✅ Completada{% else %}⏳ Pendiente{% endif %}</small>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No hay actividades registradas.</p>
+        <p><a href="/admin/">Ve al admin</a> para agregar actividades.</p>
+    {% endif %}
+    
+    <hr>
+    <p><a href="/admin/">Administrar actividades</a></p>
+</body>
+</html>

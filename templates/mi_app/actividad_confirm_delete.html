@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="container py-5">
+    <div class="card p-4 text-center">
+      <h3 class="mb-3">¿Eliminar actividad?</h3>
+      <p class="mb-4">Vas a eliminar: <strong>{{ actividad.titulo }}</strong></p>
+      <form method="post">
+        {% csrf_token %}
+        <button class="btn btn-danger" type="submit">Confirmar eliminación</button>
+        <a href="{% url 'home' %}" class="btn btn-outline-secondary">Cancelar</a>
+      </form>
+    </div>
+  </div>
+{% endblock %}
